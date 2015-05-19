@@ -1,0 +1,65 @@
+#! /usr/bin/env python
+
+from optparse import OptionParser, Option, IndentedHelpFormatter
+import substrate
+
+# This allows you to document positional arguments as well as optional
+# ones. A useful workaround until we upgrade to Python 2.7 and
+# argparse is available.
+# 
+# Taken from this Stack Overflow answer:
+# http://stackoverflow.com/questions/642648/how-do-i-format-positional-argument-help-using-pythons-optparse/664614#664614
+class PosOptionParser(OptionParser):
+    def format_help(self, formatter=None):
+        class Positional(object):
+            def __init__(self, args):
+                self.option_groups = []
+                self.option_list = args
+
+        positional = Positional(self.positional)
+        formatter = IndentedHelpFormatter()
+        formatter.store_option_strings(positional)
+        output = ['\n', formatter.format_heading("Positional Arguments")]
+        formatter.indent()
+        pos_help = [formatter.format_option(opt) for opt in self.positional]
+        pos_help = [line.replace('--','') for line in pos_help]
+        output += pos_help
+        return OptionParser.format_help(self, formatter) + ''.join(output)
+
+    def add_positional_argument(self, option):
+        try:
+            args = self.positional
+        except AttributeError:
+            args = []
+        args.append(option)
+        self.positional = args
+
+    def set_out(self, out):
+        self.out = out
+
+def main():
+    usage = """usage: %prog [options] new directory"""
+    description = "Substrate is a base application for Google App Engine."
+
+    parser = PosOptionParser(usage, description=description, version="%%prog %s" % substrate.__version__)
+    parser.add_positional_argument(Option('--command', action='store_true', help='Either "new" or "update". The new command will create a new application in directory (overwriting existing files). The update command will upgrade the substrate-specific files in directory.'))
+    parser.add_positional_argument(Option('--directory', action='store_true', help='the directory to modify; its name will be used as the basis for your application ID for the new command'))
+    
+    (options, args) = parser.parse_args()                               
+
+    if len(args) != 2:
+        parser.error("incorrect number of arguments")
+
+    cmd = args[0]
+    directory = args[1]
+
+    command = getattr(substrate, cmd, None)
+
+    if command:
+        command(directory)
+    else:
+        parser.error("unknown command %s" % cmd)
+
+if __name__ == '__main__':
+    main()
+    

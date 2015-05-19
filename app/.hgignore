@@ -1,0 +1,16 @@
+syntax: glob
+
+*.pyc
+*.pyo
+bulkloader*
+*.orig
+*~
+*.swp
+*.swo
+*.sav
+Thumbs.db
+.DS_Store
+sdkpath.cfg
+.idea/*
+.project
+.pydevproject

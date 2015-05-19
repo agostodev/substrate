@@ -1,0 +1,52 @@
+application: your-app-id
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: 'settings'
+
+builtins:
+- deferred: on
+- remote_api: on
+
+inbound_services:
+- warmup
+
+libraries:
+- name: django
+  version: "1.3"
+- name: webapp2
+  version: latest
+
+handlers:
+- url: /_ah/warmup
+  script: warmup.application
+
+- url: /(robots\.txt|favicon\.ico)
+  static_files: static/\1
+  upload: static/(.*)
+
+- url: /css
+  static_dir: static/css
+
+- url: /img
+  static_dir: static/img
+
+- url: /js
+  static_dir: static/js
+
+- url: .*
+  script: main.application
+
+skip_files:
+- ^local/.*
+- ^tests/.*
+- ^.hg/.*
+- ^.idea/.*
+- ^.*~
+- ^.*\.py[co]
+- ^.*\.po
+- ^.*\.pot
+- ^\.DS_Store.*
