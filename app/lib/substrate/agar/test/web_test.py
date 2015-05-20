@@ -1,5 +1,6 @@
 import unittest
 import webtest
+from webtest.app import NoDefault
 
 
 class WebTest(unittest.TestCase):
@@ -34,18 +35,27 @@ class WebTest(unittest.TestCase):
             self._web_test_app = webtest.TestApp(self.APPLICATION)
 
         return self._web_test_app
-            
+
     def get(self, url, params=None, headers=None):
         return self.app.get(url, params=params, headers=headers, status="*", expect_errors=True)
 
     def post(self, url, params='', headers=None, upload_files=None):
         return self.app.post(url, params, headers=headers, status="*", expect_errors=True, upload_files=upload_files)
 
+    def post_json(self, url, params=NoDefault, headers=None):
+        return self.app.post_json(url, params, headers=headers, status="*", expect_errors=True)
+
     def put(self, url, params='', headers=None, upload_files=None):
         return self.app.put(url, params, headers=headers, status="*", expect_errors=True, upload_files=upload_files)
 
+    def put_json(self, url, params=NoDefault, headers=None):
+        return self.app.put_json(url, params, headers=headers, status="*", expect_errors=True)
+
     def delete(self, url, headers=None):
         return self.app.delete(url, headers=headers, status="*", expect_errors=True)
+
+    def delete_json(self, url, params=NoDefault, headers=None):
+        return self.app.delete_json(url, params, headers=headers, status="*", expect_errors=True)
 
     def assertOK(self, response):
         """
@@ -60,14 +70,14 @@ class WebTest(unittest.TestCase):
         :param to: an absolute or relative URL that the redirect must match.
         """
         self.assertEqual(code, response.status_int)
-        
+
         if to:
             if not to.startswith("http"):
                 to = 'http://localhost%s' % to
 
             self.assertEqual(response.headers['Location'], to)
 
-    def assertForbidden(self, response):
+    def assertForbidden(self, response):    
         """
         Assert that ``response`` was 403 Forbidden.
         """
@@ -94,4 +104,3 @@ class WebTest(unittest.TestCase):
         Assert that ``response`` was 400 Bad Request.
         """
         self.assertEqual(400, response.status_int)
-        

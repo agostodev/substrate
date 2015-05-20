@@ -9,13 +9,18 @@ restler package classes and functions.
 
 >>> from google.appengine.ext import db
 >>> from restler.serializers import ModelStrategy, to_json, to_xml, SKIP
+>>> from restler.decorators import ae_db_serializer
 
 To help with our examples, let's create a simple ``db.Model`` class that we'll later serialize.
+
 
 >>> class Person(db.Model):
 ...     first_name = db.StringProperty()
 ...     last_name = db.StringProperty()
 ...     ssn = db.StringProperty()
+...
+... # Normally done as @ae_db_serializer (class decorator)
+... Person = ae_db_serializer(Person)
 
 Next, we'll create an instance of the Person class.
 
@@ -180,3 +185,18 @@ Here's an example of how you might version an API
 '[{"first_name": "Jeanne", "last_name": "d\'Arc"}, {"street1": "4422 Colfax Ave.", "state": "MN", "street2": null, "zip": "55407", "city": "Minneapolis"}]'
 
 """
+
+
+class UnsupportedTypeError(Exception):
+    """ A known type that should be explicitly handled because there are multiple valid ways of handling this type.
+    There are two ways of handling types that raise this error.  First, explicitly handle the field with a callable.
+    Or, create a new decorator with the decorator builder with a standard way to handle this type.
+    """
+
+    def __init__(self, type_, msg=None):
+        self.value = type_
+        self.msg = ("'%s' type needs to be handled explicitly.  There is no _standard_ way of handling this type. "
+                     "Consider using a callable that explicitly handles the field that uses this type.") % self.value.__name__
+
+    def __str__(self):
+        return self.msg

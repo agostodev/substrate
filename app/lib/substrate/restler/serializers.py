@@ -5,6 +5,7 @@ import decimal
 import json
 import pprint
 import types
+import warnings
 
 from xml.etree import ElementTree as ET
 
@@ -18,7 +19,7 @@ TIME_FORMAT = "%H:%M:%S"
 DEFAULT_STYLE = {
     'xml': {
         "root": lambda thing: ET.Element("result"),
-        "model": lambda el, thing: ET.SubElement(el, thing.restler_kind(thing)),
+        "model": lambda el, thing: ET.SubElement(el, thing._restler_serialization_name()),
         "list": lambda el, thing: None,  # top level element for a list
         "list_item": lambda el, thing: ET.SubElement(el, "item"),  # An item in a list
         "dict": lambda el, thing: None,  # top level element for a dict
@@ -125,7 +126,7 @@ class ModelStrategy(object):
         """
         self.model = model
         if include_all_fields:
-            self.fields = model.restler_properties(model)
+            self.fields = model._restler_property_map().keys()
         else:
             self.fields = []
         self.name = output_name
@@ -162,11 +163,12 @@ class ModelStrategy(object):
                         else:
                             raise ValueError("Cannot add field.  '%s' already exists" % name)
                 elif name not in names:
-                    fields = self.model.restler_properties(self.model)
+                    fields = self.model._restler_property_map().keys()
                     if (name in fields
                             or isinstance(getattr(self.model, name, None), property)
                             or callable(getattr(self.model, name, None))
-                            or self.model.restler_extra_types(getattr(self.model, name, None))):
+                            or getattr(getattr(self.model, name, None), "__class__", None)
+                                in self.model._restler_types()):
                         model_strategy.fields.append(name)
                         names[name] = name
                     else:
@@ -266,19 +268,17 @@ class ModelStrategy(object):
 
 
 def encoder_builder(type_, strategy=None, style=None, context={}):
+    encoders = {}
+    for strat in strategy:
+        if hasattr(strat, '_restler_types'):
+            encoders.update(strat._restler_types())
+
     def default_impl(obj):
         # Load objects from the datastore (could be done in parallel)
         if strategy:
-            for stat in strategy:
-                if hasattr(stat, 'restler_collection_types'):
-                    if stat.restler_collection_types(obj):
-                        return [o for o in obj]
-
-                if hasattr(stat, 'restler_encoder'):
-                        encoded_obj = stat.restler_encoder(obj)
-                        if encoded_obj is not None:
-                            return encoded_obj
-
+            if obj is not None:
+                if obj.__class__ in encoders:
+                    return encoders[obj.__class__](obj)
         if isinstance(obj, datetime.datetime):
             d = datetime_safe.new_datetime(obj)
             return d.strftime("%s %s" % (DATE_FORMAT, TIME_FORMAT))
@@ -291,17 +291,17 @@ def encoder_builder(type_, strategy=None, style=None, context={}):
             return str(obj)
 
         ret = {}  # What we're most likely going to return (populated, of course)
-        if hasattr(obj, 'restler_kind') or isinstance(obj, models.TransientModel):
+        if hasattr(obj, '_restler_serialization_name') or isinstance(obj, models.TransientModel):
             model = {}
-            kind = obj.restler_kind(obj)
-            # User the model's properties
+            kind = obj._restler_serialization_name()
+            # Using the model's properties
             if strategy is None:
-                fields = obj.restler_properties(obj)
+                fields = obj._restler_property_map().keys()
             else:
                 # Load the customized mappings
                 fields = strategy.get(obj.__class__, None)
                 if fields is None:
-                    fields = obj.restler_properties(obj)
+                    fields = obj._restler_property_map().keys()
                 # If it's a dict, we're changing the output_name for the model
                 elif isinstance(fields, dict):
                     if len(fields.keys()) != 1:
@@ -327,20 +327,27 @@ def encoder_builder(type_, strategy=None, style=None, context={}):
                 if callable(target):  # Defer to the callable
                     # if the function has exactly two arguments, assume we should include the context param
                     if hasattr(target, "func_code") and target.func_code.co_argcount == 2:
+                        warnings.warn("Callable should be called with the following three arguments: "
+                            "instance, field_name, context", DeprecationWarning)
                         model[field_name] = target(obj, context)
+                    elif hasattr(target, "func_code") and target.func_code.co_argcount == 3:
+                        model[field_name] = target(obj, field_name, context)
                     else:  # No context passed
+                        warnings.warn("Callable should be called with the following three arguments: "
+                                      "instance, field_name, context", DeprecationWarning)
                         model[field_name] = target(obj)
                     # if we get back an instance of SKIP, don't include this field in the output
                     if isinstance(model[field_name], SkipField):
                         del model[field_name]
                 else:
-                    if target:  # Remapped name
-                        if hasattr(obj, target):
-                            model[field_name] = getattr(obj, target)
-                        else:
-                            raise ValueError("'%s' was not found " % target)
-                    else:  # Common case (just the field)
-                        model[field_name] = getattr(obj, field_name)
+                    field_name_type = obj._restler_property_map().get(target or field_name, None)
+                    field_callable = obj._restler_types().get(field_name_type, None)
+                    if target and not hasattr(obj, target):
+                        raise ValueError("'%s' was not found " % target)
+                    if field_callable:
+                        model[field_name] = field_callable(getattr(obj, target or field_name))
+                    else:
+                        model[field_name] = getattr(obj, target or field_name)
         return ret
     if type_ == "json":
         class AEEncoder(json.JSONEncoder):
@@ -405,7 +412,7 @@ def _encode_xml(thing, node, strategy, style, context):
         el = xml_style["list"](node, thing)
         if el is None: el = node
         for value in thing:
-            if hasattr(value, 'restler_kind'):
+            if hasattr(value, '_restler_serialization_name'):
                 # Note: we don't create an item in this circumstance
                 _encode_xml(encoder(value), el, strategy, style, context)
                 continue

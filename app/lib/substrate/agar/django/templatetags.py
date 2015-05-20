@@ -2,12 +2,9 @@
 The ``agar.templatetags.webapp2`` module contains `django template tags`_.
 """
 
-from django.template import Node, TemplateSyntaxError
+from django.template import Library, Node, TemplateSyntaxError
 
-from google.appengine.ext.webapp import template
-
-# Get the template Library
-register = template.create_template_register()
+register = Library()
 
 
 class URLNode(Node):
