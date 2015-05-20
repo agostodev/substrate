@@ -5,7 +5,7 @@ Substrate is a base application and set of libraries for making
 `Google App Engine python`_ development easier. It includes a base app with management
 script, testing already set up, a set of common helper functions
 (`agar`_), and a serialization library (`restler`_). It also comes with
-common libraries like `webapp2`_ and `pytz`_ ready to go.
+common libraries like `webapp2`_ ready to go.
 
 Substrate is based on best practices for `Google App Engine python`_ learned in
 developing several real-world applications with many users.
