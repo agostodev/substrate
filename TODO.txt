@@ -3,7 +3,3 @@ TODO
 ====
  * add copyright file headers
  * add tests for session middleware
-
-DONE
-====
- 
