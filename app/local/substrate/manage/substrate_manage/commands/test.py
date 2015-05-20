@@ -1,14 +1,25 @@
 """ Run tests using unittest2 'discover' """
-
-import logging
 import os
 import sys
-import tempfile
+import getopt
 
-from google.appengine.api import yaml_errors
-from google.appengine.tools import dev_appserver
-from google.appengine.tools import dev_appserver_main
+import env_setup
+env_setup.setup_django()
 
+
+def usage():
+    print """{}
+Usage: python manage.py test
+
+Options:
+  -h, --help       Show this message
+  -v, --verbose    Verbose output
+  -q, --quiet      Minimal output
+  -f, --failfast   Stop on first failure
+  -c, --catch      Catch control-C and display results
+  -b, --buffer     Buffer stdout and stderr during test runs
+
+""".format(__doc__)
 
 __unittest = True
 try:
@@ -16,34 +27,24 @@ try:
 except ImportError:
     from unittest.main import main
 
-
-config = matcher = None
-
 try:
-    config, matcher, from_cache = dev_appserver.LoadAppConfig(".", {})
-except yaml_errors.EventListenerError, e:
-    logging.error('Fatal error when loading application configuration:\n' + str(e))
-except dev_appserver.InvalidAppConfigError, e:
-    logging.error('Application configuration file invalid:\n%s', e)
+    opts, args = getopt.getopt(sys.argv[1:], "hvqfcbs", ["help", "verbose", "quiet", "failfast", "catch", "buffer", "start-directory"])
+except getopt.GetoptError:
+    usage()
+    sys.exit(2)
 
-#Configure our dev_appserver setup args
-args = dev_appserver_main.DEFAULT_ARGS.copy()
-args[dev_appserver_main.ARG_CLEAR_DATASTORE] = True
-args[dev_appserver_main.ARG_BLOBSTORE_PATH] = os.path.join(
-        tempfile.gettempdir(), 'dev_appserver.test.blobstore')
-args[dev_appserver_main.ARG_DATASTORE_PATH] = os.path.join(
-        tempfile.gettempdir(), 'dev_appserver.test.datastore')
-args[dev_appserver_main.ARG_PROSPECTIVE_SEARCH_PATH] = os.path.join(
-        tempfile.gettempdir(), 'dev_appserver.test.matcher')
-args[dev_appserver_main.ARG_HISTORY_PATH] = os.path.join(
-        tempfile.gettempdir(), 'dev_appserver.test.datastore.history')
-
-dev_appserver.SetupStubs(config.application, **args)
+dir = False
+for opt, arg in opts:
+    if opt in ("-h", "--help"):
+        usage()
+        sys.exit()
+    if opt in ("-s", "--start-directory"):
+	dir = arg
 
 sys.path.insert(0, os.path.abspath(os.path.curdir))
 
 if __name__ == "__main__":
-    argv = ['unit2', 'discover', '--start-directory', 'tests']
+    argv = ['unit2', 'discover', '--start-directory', dir] if dir else ['unit2', 'discover', '--start-directory', 'tests'] 
     argv.extend(sys.argv[1:])
     sys.argv = argv
     main()
