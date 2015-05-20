@@ -1,4 +1,4 @@
-application: your-app-id
+application: snapshot 
 version: 1
 runtime: python27
 api_version: 1
@@ -37,16 +37,20 @@ handlers:
 - url: /js
   static_dir: static/js
 
-- url: .*
-  script: main.application
+- url: /.*
+  script: routes.application
+  secure: optional
 
 skip_files:
 - ^local/.*
 - ^tests/.*
+- ^scripts/.*
 - ^.hg/.*
+- ^.git/.*
 - ^.idea/.*
 - ^.*~
 - ^.*\.py[co]
 - ^.*\.po
 - ^.*\.pot
+- ^.*\.egg-info
 - ^\.DS_Store.*
