@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2011 Thomas Bohmbach Jr.
+Copyright (c) 2015 Curtis Thompson, Thomas Bohmbach Jr., Luke Francl, Brian Michelich, 
+Sean Duncan, Karl Kroening, Kris Hokanson, Nick Bauman, Levi Tomes 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
