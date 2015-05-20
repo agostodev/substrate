@@ -21,21 +21,22 @@ Resources
 * `PyPI Package`_
 * `Source Code Repository`_
 
+Development of additions and tests for substrate
+________________________________________________
+
+If you are making changes or additions to substrate proper, this is right repo to clone and test your changes on.
+You make changes here locally, install the new version of substrate on your local and test it. Then issue a PR.
+
+If you make changes to anything in `agar`_ or `restler`_ make those changes in those respective repos first, THEN
+hoist that work here running the `update_agar.py`_ and `update_restler.py`_ scripts accordingly. Make sure `agar`
+and `restler` repos are on the same level as this repo is for it to work properly.
+
 Installation
 ------------
 
-To install substrate, run::
+To install substrate, clone this repo and run
 
-  $ easy_install substrate
-
-To update your substrate installation to the newest release::
-
-  $ easy_install --upgrade substrate
-
-To install or update manually, `download the PyPI package`_,
-(or to stay on the bleeding edge, clone the `substrate repository`_) and run::
-
-  $ python setup.py install
+  $ sudo python ./setup.py install
 
 Creating a new application
 --------------------------

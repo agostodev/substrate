@@ -1,5 +1,7 @@
 
 TODO
 ====
+ * add snapdeploy instructions to README
+ * add alternative test runner instructions to README
  * add copyright file headers
  * add tests for session middleware
