@@ -28,7 +28,7 @@ If you are making changes or additions to substrate proper, this is right repo t
 You make changes here locally, install the new version of substrate on your local and test it. Then issue a PR.
 
 If you make changes to anything in `agar`_ or `restler`_ make those changes in those respective repos first, THEN
-hoist that work here running the `update_agar.py`_ and `update_restler.py`_ scripts accordingly. Make sure `agar`
+hoist that work here running the `update_agar.py` and `update_restler.py` scripts accordingly. Make sure `agar`
 and `restler` repos are on the same level as this repo is for it to work properly. You will need to issue separate
 PRs for each repo, obviously.
 

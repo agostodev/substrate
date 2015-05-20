@@ -3,5 +3,6 @@ TODO
 ====
  * add snapdeploy instructions to README
  * add alternative test runner instructions to README
+ * fix all the links here so they point to our own repos
  * add copyright file headers
  * add tests for session middleware
