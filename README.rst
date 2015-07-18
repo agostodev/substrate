@@ -1,7 +1,11 @@
-Substrate
+Substrate / Exogorth
 =========
 
-Substrate is a base application and set of libraries for making
+This is a fork of the original PyPy artifact known as Substrate which appears to be abandoned. This is currently a
+superset of that codebase. The most interesting additions have been in the management commands around `snapdeploy`
+which is a version / delivery pipeline based on common `hg` and `git` supported deployment ideas.
+
+*Substrate / Exogorth* is a base application and set of libraries for making
 `Google App Engine python`_ development easier. It includes a base app with management
 script, testing already set up, a set of common helper functions
 (`agar`_), and a serialization library (`restler`_). It also comes with
@@ -21,15 +25,15 @@ Resources
 * `PyPI Package`_
 * `Source Code Repository`_
 
-Development of additions and tests for substrate
+Development of additions and tests for substrate / exogorth
 ________________________________________________
 
 If you are making changes or additions to substrate proper, this is right repo to clone and test your changes on.
 You make changes here locally, install the new version of substrate on your local and test it. Then issue a PR.
 
-If you make changes to anything in `agar`_ or `restler`_ make those changes in those respective repos first, THEN
-hoist that work here running the `update_agar.py` and `update_restler.py` scripts accordingly. Make sure `agar`
-and `restler` repos are on the same level as this repo is for it to work properly. You will need to issue separate
+If you make changes to anything in the exogorth packages (`agar`_ or `restler`_) make those changes in those respective
+repos first, THEN hoist that work here running the update_agar.py and update_restler.py scripts accordingly. Make sure
+`agar` and `restler` repos are on the same level as this repo is for it to work properly. You will need to issue separate
 PRs for each repo, obviously.
 
 Installation
@@ -143,7 +147,7 @@ As noted above, ``manage.py`` has a ``test`` command. This runs all
 the tests in the ``tests`` directory of your application using
 `unittest2`_. Included with the Substrate base app is a simple "hello
 world" test that you can run to verify your installation. It is
-located in ``tests/handlers/test_main.py``.
+located in ``tests/test_main.py``.
 
 Substrate includes test helpers located in the `agar.test`_
 package. ``agar.test`` uses ``google.appengine.ext.testbed`` to set up your
@@ -158,16 +162,16 @@ own licenses. Original code in Substrate is under the `MIT license`_.
 
 .. Links
 
-.. _Documentation: http://packages.python.org/substrate
+.. _Documentation: http://packages.python.org/substrate-exogorth
 
-.. _PyPI Package: http://pypi.python.org/pypi/substrate
-.. _download the PyPI package: http://pypi.python.org/pypi/substrate#downloads
+.. _PyPI Package: http://pypi.python.org/pypi/substrate-exogorth
+.. _download the PyPI package: http://pypi.python.org/pypi/substrate-exogorth#downloads
 
-.. _Source Code Repository: http://bitbucket.org/gumptioncom/substrate
-.. _substrate repository: http://bitbucket.org/gumptioncom/substrate
+.. _Source Code Repository: https://github.com/agostodev/substrate-exogorth/substrate
+.. _substrate repository: https://github.com/agostodev/substrate-exogorth/substrate
 
-.. _agar: http://packages.python.org/substrate/agar.html
-.. _restler: http://packages.python.org/substrate/restler.html
+.. _agar: http://packages.python.org/substrate-exogorth/agar.html
+.. _restler: http://packages.python.org/substrate-exogorth/restler.html
 
 .. _Google App Engine python: http://code.google.com/appengine/docs/python/overview.html
 
@@ -175,8 +179,6 @@ own licenses. Original code in Substrate is under the `MIT license`_.
 .. _unitetest2 discover: http://docs.python.org/library/unittest.html#test-discovery
 
 .. _webapp2: http://code.google.com/p/webapp-improved/
-
-.. _pytz: http://pytz.sourceforge.net/
 
 .. _iPython: http://ipython.org/
 

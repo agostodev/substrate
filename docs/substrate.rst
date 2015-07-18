@@ -109,7 +109,7 @@ As noted above, ``manage.py`` has a ``test`` command. This runs all
 the tests in the ``tests`` directory of your application using
 `unittest2`_. Included with the Substrate base app is a simple "hello
 world" test that you can run to verify your installation. It is
-located in ``tests/handlers/test_main.py``.
+located in ``tests/test_main.py``.
 
 .. Links
 
