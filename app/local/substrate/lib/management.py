@@ -70,7 +70,7 @@ def print_subcommand_overviews(substrate_commands, usr_commands):
     cmd_width = max(len(os.path.splitext(os.path.basename(command))[0]) 
                     for command in (substrate_commands + usr_commands))
 
-    print "manage.py built-in commands: "
+    print "manage.py built-in commands:"
     for command in substrate_commands:
         print_command_doc(command, cmd_width)
     if usr_commands:

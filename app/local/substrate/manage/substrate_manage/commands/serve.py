@@ -1,7 +1,8 @@
 """ Run dev_appserver with the correct command-line arguments.
 
-The 'serve' command looks at `snapdeploy.yaml` to figure out which modules need to be served, and then runs
-dev_appserver with the correct settings. In addition, a `pre-serve-script` can be specified to run prior to
+The 'serve' command looks at `snapdeploy.yaml` to figure out which modules need
+to be served, and then runs dev_appserver with the correct settings. In
+addition, a `pre-serve-script` can be specified to run prior to
 dev_appserver, to do things such as JS/CSS preprocessing.
 """
 

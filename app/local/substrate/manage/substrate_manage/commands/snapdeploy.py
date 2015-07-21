@@ -2,30 +2,36 @@
 
 This script does the following:
  - Ensure the working directory is on the default branch with no local changes.
- - Determine a version string for the current source code based on the hg revision ID
+ - Determine a version string for the current source code based on the hg
+   revision ID
  - Update version setting in snapdeploy.yaml
  - Deploy to App Engine via appcfg.py
  - Notify user that he/she must commit/push the snapdeploy.yaml changes.
 
-By automating these steps, the aim is to reduce human error where the person deploying forgets to bump the version
-number in snapdeploy.yaml/app.yaml so that the versions deployed to app engine have consistent names.  This allows
-versions to be tracked so that the exact same version that gets deployed/tested on Int can later be pushed to Stage.
+By automating these steps, the aim is to reduce human error where the person
+deploying forgets to bump the version number in snapdeploy.yaml/app.yaml so
+that the versions deployed to app engine have consistent names.  This allows
+versions to be tracked so that the exact same version that gets
+deployed/tested on Int can later be pushed to Stage.
 
 
 Usage:
 
     python manage.py snapdeploy [options for appcfg.py ...]
 
-Any number of options can be specified and are passed as-is to 'appcfg.py update'. For example:
+Any number of options can be specified and are passed as-is to
+'appcfg.py update'. For example:
 
     python manage.py snapdeploy -A proactiveservices-stage --oauth2
 
 
-Older versions may be redeployed in a deterministic manner.  To do so, update your working directory to the desired
-changeset ID (which can be found by looking at the right-hand side of a version string, such as in "34-4db0243959fa"),
-make sure there are no local changes, and run the script in exactly the same manner.  snapdeploy.yaml will be updated
-with the appropriate version number, but since the snapdeploy.yaml changes were already committed they can safely be
-discarded when you reset your working directory to tip.
+Older versions may be redeployed in a deterministic manner.  To do so, update
+your working directory to the desired changeset ID (which can be found by
+looking at the right-hand side of a version string, such as in
+"34-4db0243959fa"), make sure there are no local changes, and run the script in
+exactly the same manner.  snapdeploy.yaml will be updated with the appropriate
+version number, but since the snapdeploy.yaml changes were already committed
+they can safely be discarded when you reset your working directory to tip.
 """
 import re
 import sys
