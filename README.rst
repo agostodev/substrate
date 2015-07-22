@@ -26,7 +26,7 @@ Resources
 * `Source Code Repository`_
 
 Development of additions and tests for substrate / exogorth
-________________________________________________
+___________________________________________________________
 
 If you are making changes or additions to substrate proper, this is right repo to clone and test your changes on.
 You make changes here locally, install the new version of substrate on your local and test it. Then issue a PR.
@@ -42,6 +42,10 @@ Installation
 To install substrate, clone this repo and run
 
   $ sudo python ./setup.py install
+
+Or use git+git and pip;
+
+  $ sudo -H pip install --upgrade git+git://github.com/agostodev/substrate.git#egg=substrate
 
 Creating a new application
 --------------------------
