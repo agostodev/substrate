@@ -4,6 +4,7 @@ import sys
 import getopt
 
 import env_setup
+
 env_setup.setup_django()
 
 
@@ -21,6 +22,7 @@ Options:
 
 """.format(__doc__)
 
+
 __unittest = True
 try:
     from unittest2.main import main_ as main
@@ -28,23 +30,25 @@ except ImportError:
     from unittest.main import main
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "hvqfcbs", ["help", "verbose", "quiet", "failfast", "catch", "buffer", "start-directory"])
+    opts, args = getopt.getopt(sys.argv[1:], "hvqfcbs",
+                               ["help", "verbose", "quiet", "failfast", "catch", "buffer", "start-directory"])
 except getopt.GetoptError:
     usage()
     sys.exit(2)
 
-dir = False
+local_dir = False
 for opt, arg in opts:
     if opt in ("-h", "--help"):
         usage()
         sys.exit()
     if opt in ("-s", "--start-directory"):
-	dir = arg
+        local_dir = arg
 
 sys.path.insert(0, os.path.abspath(os.path.curdir))
 
 if __name__ == "__main__":
-    argv = ['unit2', 'discover', '--start-directory', dir] if dir else ['unit2', 'discover', '--start-directory', 'tests'] 
+    argv = ['unit2', 'discover', '--start-directory', local_dir] if local_dir else ['unit2', 'discover', '--start-directory',
+                                                                        'tests']
     argv.extend(sys.argv[1:])
     sys.argv = argv
     main()

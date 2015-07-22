@@ -100,25 +100,24 @@ the default location, you can pass the path as an argument.
 
   $ ./manage.py test
 
-Runs your application's tests. Any additional parameters are passed to the `unitetest2 discover`_ command::
+Runs your application's tests. Any additional parameters are passed to the `unitetest2 discover`_ command
 
-  $ ./manage.py test --help
+::
 
-  Usage: unit2 discover [options]
+   $./manage.py pytest
 
-  Options:
-    -h, --help            show this help message and exit
-    -v, --verbose         Verbose output
-    -f, --failfast        Stop on first fail or error
-    -c, --catch           Catch ctrl-C and display results so far
-    -b, --buffer          Buffer stdout and stderr during tests
-    -s START, --start-directory=START
-                          Directory to start discovery ('.' default)
-    -p PATTERN, --pattern=PATTERN
-                          Pattern to match tests ('test*.py' default)
-    -t TOP, --top-level-directory=TOP
-                          Top level directory of project (defaults to start
-                          directory)
+Runs your tests using the ``py.test`` runner. Any additional parameters are passed to the underlying runner
+
+::
+
+   $./manage.py snapdeploy
+
+Tries to deploy you app and modules to Google AppEngine. Relies on your local git or hg repo to conduct a deploy.
+Creates a version with the SHA-1 of the current repo / branch in the cloud and updates a ``snapdeploy.yaml`` file to
+commit. Very useful for deploying to multiple app ids and modules with consistent codebases. Supports most options you
+can pass to ``appcfg.py``
+
+::
 
 Adding Your Own Commands
 ------------------------

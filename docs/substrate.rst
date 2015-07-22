@@ -80,6 +80,15 @@ the default location, you can pass the path as an argument.
 
 ::
 
+   $./manage.py snapdeploy
+
+Tries to deploy you app and modules to Google AppEngine. Relies on your local git or hg repo to conduct a deploy.
+Creates a version with the SHA-1 of the current repo / branch in the cloud and updates a ``snapdeploy.yaml`` file to
+commit. Very useful for deploying to multiple app ids and modules with consistent codebases. Supports most options you
+can pass to ``appcfg.py``
+
+::
+
   $ ./manage.py test
 
 Runs your application's tests. Any additional parameters are passed to the `unitetest2 discover`_ command::
