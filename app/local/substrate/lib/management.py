@@ -12,10 +12,12 @@ DIR_PATH = ""
 for d in os.environ["PATH"].split(":"):
     dev_appserver_path = os.path.join(d, "dev_appserver.py")
     if os.path.isfile(dev_appserver_path):
-        DIR_PATH = os.path.abspath(os.path.dirname(os.path.realpath(dev_appserver_path)))
-        sys.path.append(DIR_PATH)
-        import dev_appserver
-        sys.path.pop()
+        with open(dev_appserver_path) as fd:
+            if 'EXTRA_PATHS' in fd.read():
+                DIR_PATH = os.path.abspath(os.path.dirname(os.path.realpath(dev_appserver_path)))
+                sys.path.append(DIR_PATH)
+                import dev_appserver
+                sys.path.pop()
 
 
 if not hasattr(sys, 'version_info'):
