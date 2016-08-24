@@ -22,7 +22,7 @@ libraries:
 
 handlers:
 - url: /_ah/warmup
-  script: warmup.application
+  script: routes.application
 
 - url: /(robots\.txt|favicon\.ico)
   static_files: static/\1
